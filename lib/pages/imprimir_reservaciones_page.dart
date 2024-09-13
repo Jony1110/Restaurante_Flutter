@@ -13,34 +13,37 @@ class ImprimirReservacionesPage extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Imprimir Reservaciones'),
+        backgroundColor: Colors.teal, 
       ),
-      body: ListView(
-        children: [
-          ListTile(
-            title: const Text('Ember'),
-            onTap: () {
-              _mostrarReservaciones(context, 'Ember');
-            },
-          ),
-          ListTile(
-            title: const Text('Zao'),
-            onTap: () {
-              _mostrarReservaciones(context, 'Zao');
-            },
-          ),
-          ListTile(
-            title: const Text('Grappa'),
-            onTap: () {
-              _mostrarReservaciones(context, 'Grappa');
-            },
-          ),
-          ListTile(
-            title: const Text('Larimar'),
-            onTap: () {
-              _mostrarReservaciones(context, 'Larimar');
-            },
-          ),
-        ],
+      body: Padding(
+        padding: const EdgeInsets.all(16), 
+        child: ListView(
+          children: [
+            _buildRestaurantTile(context, 'Ember'),
+            _buildRestaurantTile(context, 'Zao'),
+            _buildRestaurantTile(context, 'Grappa'),
+            _buildRestaurantTile(context, 'Larimar'),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildRestaurantTile(BuildContext context, String nombreRestaurante) {
+    final reservacionesRestaurante = reservaciones
+        .where((r) => r.restaurante.nombre == nombreRestaurante)
+        .toList();
+
+    return Card(
+      margin: const EdgeInsets.symmetric(vertical: 8), 
+      elevation: 4, 
+      child: ListTile(
+        title: Text(nombreRestaurante, style: const TextStyle(fontWeight: FontWeight.bold)),
+        subtitle: Text('Número de reservaciones: ${reservacionesRestaurante.length}'),
+        trailing: const Icon(Icons.arrow_forward_ios), 
+        onTap: () {
+          _mostrarReservaciones(context, nombreRestaurante);
+        },
       ),
     );
   }
@@ -61,13 +64,18 @@ class ImprimirReservacionesPage extends StatelessWidget {
               itemCount: reservacionesRestaurante.length,
               itemBuilder: (context, index) {
                 final reservacion = reservacionesRestaurante[index];
-                return ListTile(
-                  title: Text('${reservacion.nombreCliente} (${reservacion.hora})'),
-                  subtitle: Text('Personas: ${reservacion.cantidadPersonas}'),
-                  onTap: () {
-                    Navigator.of(context).pop(); // Cierra el diálogo
-                    _generarPdf(context, reservacion);
-                  },
+                return Card(
+                  margin: const EdgeInsets.symmetric(vertical: 8),
+                  elevation: 4,
+                  child: ListTile(
+                    title: Text('${reservacion.nombreCliente} (${reservacion.hora})'),
+                    subtitle: Text('Personas: ${reservacion.cantidadPersonas}'),
+                    trailing: const Icon(Icons.picture_as_pdf), 
+                    onTap: () {
+                      Navigator.of(context).pop();
+                      _generarPdf(context, reservacion);
+                    },
+                  ),
                 );
               },
             ),
@@ -105,7 +113,6 @@ class ImprimirReservacionesPage extends StatelessWidget {
       ),
     );
 
-    // Muestra el PDF en una vista previa antes de imprimir
     await Printing.layoutPdf(
       onLayout: (PdfPageFormat format) async => pdf.save(),
     );

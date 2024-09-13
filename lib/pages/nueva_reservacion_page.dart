@@ -17,7 +17,7 @@ class _NuevaReservacionPageState extends State<NuevaReservacionPage> {
   int cantidadPersonas = 1;
   Restaurante? restauranteSeleccionado;
   String? horaSeleccionada;
-  int? cuposRestantes; // Variable para mostrar los cupos restantes
+  int? cuposRestantes; 
 
   List<Restaurante> restaurantes = [
     Restaurante(nombre: 'Ember', capacidadMaxima: 3),
@@ -28,7 +28,6 @@ class _NuevaReservacionPageState extends State<NuevaReservacionPage> {
 
   List<String> horas = ['6 a 8 pm', '8 a 10 pm'];
 
-  // Función para calcular cuántos cupos quedan disponibles
   int cuposDisponibles(Restaurante restaurante, String hora) {
     int reservacionesActuales = reservaciones
         .where((r) => r.restaurante.nombre == restaurante.nombre && r.hora == hora)
@@ -103,7 +102,7 @@ class _NuevaReservacionPageState extends State<NuevaReservacionPage> {
                 onChanged: (value) {
                   setState(() {
                     restauranteSeleccionado = value;
-                    _actualizarCuposRestantes(); // Actualizamos los cupos
+                    _actualizarCuposRestantes(); 
                   });
                 },
                 validator: (value) => value == null ? 'Seleccione un restaurante' : null,
@@ -123,13 +122,13 @@ class _NuevaReservacionPageState extends State<NuevaReservacionPage> {
                 onChanged: (value) {
                   setState(() {
                     horaSeleccionada = value;
-                    _actualizarCuposRestantes(); // Actualizamos los cupos
+                    _actualizarCuposRestantes(); 
                   });
                 },
                 validator: (value) => value == null ? 'Seleccione una hora' : null,
               ),
               const SizedBox(height: 16),
-              // Mostramos los cupos disponibles si el restaurante y la hora ya están seleccionados
+              
               if (cuposRestantes != null)
                 Text(
                   'Cupos restantes: $cuposRestantes',
@@ -149,8 +148,8 @@ class _NuevaReservacionPageState extends State<NuevaReservacionPage> {
               ElevatedButton(
                 onPressed: _realizarReservacion,
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.teal, // Color de fondo del botón
-                  foregroundColor: Colors.white, // Color del texto del botón
+                  backgroundColor: Colors.teal, 
+                  foregroundColor: Colors.white, 
                   padding: const EdgeInsets.symmetric(vertical: 16),
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(12),

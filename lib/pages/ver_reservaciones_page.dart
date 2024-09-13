@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:myapp/pages/nueva_reservacion_page.dart';
-// import '../models/reservacion.dart';
 
 class VerReservacionesPage extends StatelessWidget {
   const VerReservacionesPage({super.key});

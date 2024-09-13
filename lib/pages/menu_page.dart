@@ -12,7 +12,7 @@ class MenuPage extends StatelessWidget {
       appBar: AppBar(
         title: const Text('Sistema de Reservaciones'),
         centerTitle: true,
-        backgroundColor: Colors.teal, // Cambiamos el color del AppBar
+        backgroundColor: Colors.teal, 
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -54,7 +54,7 @@ class MenuPage extends StatelessWidget {
     );
   }
 
-  // Widget para construir las opciones del menú con estilo
+  
   Widget _buildMenuOption(
       BuildContext context, String title, IconData icon, Color color, Widget page) {
     return Card(
