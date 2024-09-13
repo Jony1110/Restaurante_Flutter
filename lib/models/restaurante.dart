@@ -4,3 +4,5 @@ class Restaurante {
 
   Restaurante({required this.nombre, required this.capacidadMaxima});
 }
+
+// Jonathan Frias //
