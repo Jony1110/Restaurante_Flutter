@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'pages/menu_page.dart';
+// Jonathan Frias;
 
 void main() {
   runApp(const MyApp());
@@ -19,4 +20,3 @@ class MyApp extends StatelessWidget {
     );
   }
 }
-// Jonathan Frias

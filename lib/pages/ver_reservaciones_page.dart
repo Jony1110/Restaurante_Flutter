@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:myapp/pages/nueva_reservacion_page.dart';
+// Jonathan Frias;
 
 class VerReservacionesPage extends StatelessWidget {
   const VerReservacionesPage({super.key});
@@ -31,4 +32,3 @@ class VerReservacionesPage extends StatelessWidget {
     );
   }
 }
-// Jonathan Frias

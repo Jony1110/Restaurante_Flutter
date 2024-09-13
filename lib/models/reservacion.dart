@@ -1,4 +1,5 @@
 import 'restaurante.dart';
+// Jonathan Frias;
 
 class Reservacion {
   final String nombreCliente;
@@ -6,6 +7,9 @@ class Reservacion {
   final Restaurante restaurante;
   final String hora;
 
-  Reservacion({required this.nombreCliente, required this.cantidadPersonas, required this.restaurante, required this.hora});
+  Reservacion(
+      {required this.nombreCliente,
+      required this.cantidadPersonas,
+      required this.restaurante,
+      required this.hora});
 }
-// Jonathan Frias

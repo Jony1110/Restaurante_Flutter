@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'nueva_reservacion_page.dart';
 import 'ver_reservaciones_page.dart';
 import 'imprimir_reservaciones_page.dart';
+// Jonathan Frias;
 
 class MenuPage extends StatelessWidget {
   const MenuPage({super.key});
@@ -74,4 +75,3 @@ class MenuPage extends StatelessWidget {
     );
   }
 }
-// Jonathan Frias

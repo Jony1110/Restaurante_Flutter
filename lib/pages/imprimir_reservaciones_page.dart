@@ -4,6 +4,7 @@ import 'package:pdf/widgets.dart' as pw;
 import 'package:pdf/pdf.dart';
 import 'package:printing/printing.dart';
 import '../models/reservacion.dart';
+// Jonathan Frias;
 
 class ImprimirReservacionesPage extends StatelessWidget {
   const ImprimirReservacionesPage({super.key});
@@ -118,4 +119,3 @@ class ImprimirReservacionesPage extends StatelessWidget {
     );
   }
 }
-// Jonathan Frias
