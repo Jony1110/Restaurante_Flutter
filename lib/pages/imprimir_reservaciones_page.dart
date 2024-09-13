@@ -4,7 +4,6 @@ import 'package:pdf/widgets.dart' as pw;
 import 'package:pdf/pdf.dart';
 import 'package:printing/printing.dart';
 import '../models/reservacion.dart';
-// Jonathan Frias;
 
 class ImprimirReservacionesPage extends StatelessWidget {
   const ImprimirReservacionesPage({super.key});
@@ -14,10 +13,10 @@ class ImprimirReservacionesPage extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Imprimir Reservaciones'),
-        backgroundColor: Colors.teal, 
+        backgroundColor: Colors.teal,
       ),
       body: Padding(
-        padding: const EdgeInsets.all(16), 
+        padding: const EdgeInsets.all(16),
         child: ListView(
           children: [
             _buildRestaurantTile(context, 'Ember'),
@@ -36,12 +35,12 @@ class ImprimirReservacionesPage extends StatelessWidget {
         .toList();
 
     return Card(
-      margin: const EdgeInsets.symmetric(vertical: 8), 
-      elevation: 4, 
+      margin: const EdgeInsets.symmetric(vertical: 8),
+      elevation: 4,
       child: ListTile(
         title: Text(nombreRestaurante, style: const TextStyle(fontWeight: FontWeight.bold)),
         subtitle: Text('Número de reservaciones: ${reservacionesRestaurante.length}'),
-        trailing: const Icon(Icons.arrow_forward_ios), 
+        trailing: const Icon(Icons.arrow_forward_ios),
         onTap: () {
           _mostrarReservaciones(context, nombreRestaurante);
         },
@@ -70,8 +69,8 @@ class ImprimirReservacionesPage extends StatelessWidget {
                   elevation: 4,
                   child: ListTile(
                     title: Text('${reservacion.nombreCliente} (${reservacion.hora})'),
-                    subtitle: Text('Personas: ${reservacion.cantidadPersonas}'),
-                    trailing: const Icon(Icons.picture_as_pdf), 
+                    subtitle: Text('Personas: ${reservacion.cantidadPersonas}, Sucursal: ${reservacion.sucursal.nombre}'),
+                    trailing: const Icon(Icons.picture_as_pdf),
                     onTap: () {
                       Navigator.of(context).pop();
                       _generarPdf(context, reservacion);
@@ -100,15 +99,19 @@ class ImprimirReservacionesPage extends StatelessWidget {
     pdf.addPage(
       pw.Page(
         build: (pw.Context context) {
-          return pw.Column(
-            children: [
-              pw.Text('Detalles de la Reservación', style: const pw.TextStyle(fontSize: 24)),
-              pw.SizedBox(height: 16),
-              pw.Text('Nombre del Cliente: ${reservacion.nombreCliente}'),
-              pw.Text('Restaurante: ${reservacion.restaurante.nombre}'),
-              pw.Text('Hora: ${reservacion.hora}'),
-              pw.Text('Cantidad de Personas: ${reservacion.cantidadPersonas}'),
-            ],
+          return pw.Center(
+            child: pw.Column(
+              mainAxisAlignment: pw.MainAxisAlignment.center,
+              children: [
+                pw.Text('Detalles de la Reservación', style: pw.TextStyle(fontSize: 24, fontWeight: pw.FontWeight.bold)),
+                pw.SizedBox(height: 16),
+                pw.Text('Nombre del Cliente: ${reservacion.nombreCliente}'),
+                pw.Text('Restaurante: ${reservacion.restaurante.nombre}'),
+                pw.Text('Sucursal: ${reservacion.sucursal.nombre}'),
+                pw.Text('Hora: ${reservacion.hora}'),
+                pw.Text('Cantidad de Personas: ${reservacion.cantidadPersonas}'),
+              ],
+            ),
           );
         },
       ),

@@ -17,14 +17,43 @@ class _NuevaReservacionPageState extends State<NuevaReservacionPage> {
   String nombreCliente = '';
   int cantidadPersonas = 1;
   Restaurante? restauranteSeleccionado;
+  Sucursal? sucursalSeleccionada;
   String? horaSeleccionada;
   int? cuposRestantes;
 
   List<Restaurante> restaurantes = [
-    Restaurante(nombre: 'Ember', capacidadMaxima: 3, latitud: 37.7749, longitud: -122.4194),
-    Restaurante(nombre: 'Zao', capacidadMaxima: 4, latitud: 40.7128, longitud: -74.0060),
-    Restaurante(nombre: 'Grappa', capacidadMaxima: 2, latitud: 34.0522, longitud: -118.2437),
-    Restaurante(nombre: 'Larimar', capacidadMaxima: 3, latitud: 51.5074, longitud: -0.1278),
+    Restaurante(
+      nombre: 'Ember',
+      capacidadMaxima: 3,
+      sucursales: [
+        Sucursal(nombre: 'Sucursal 1', latitud: 37.7749, longitud: -122.4194),
+        Sucursal(nombre: 'Sucursal 2', latitud: 37.7799, longitud: -122.4294),
+      ],
+    ),
+    Restaurante(
+      nombre: 'Zao',
+      capacidadMaxima: 4,
+      sucursales: [
+        Sucursal(nombre: 'Sucursal 1', latitud: 40.7128, longitud: -74.0060),
+        Sucursal(nombre: 'Sucursal 2', latitud: 40.7228, longitud: -74.0160),
+      ],
+    ),
+    Restaurante(
+      nombre: 'Larimar',
+      capacidadMaxima: 5,
+      sucursales: [
+        Sucursal(nombre: 'Sucursal 1', latitud: 34.0522, longitud: -118.2437),
+        Sucursal(nombre: 'Sucursal 2', latitud: 34.0622, longitud: -118.2537),
+      ],
+    ),
+    Restaurante(
+      nombre: 'Grappa',
+      capacidadMaxima: 6,
+      sucursales: [
+        Sucursal(nombre: 'Sucursal 1', latitud: 41.8781, longitud: -87.6298),
+        Sucursal(nombre: 'Sucursal 2', latitud: 41.8881, longitud: -87.6398),
+      ],
+    ),
   ];
 
   List<String> horas = ['6 a 8 pm', '8 a 10 pm'];
@@ -48,12 +77,17 @@ class _NuevaReservacionPageState extends State<NuevaReservacionPage> {
     }
   }
 
-  void _actualizarMapa(Restaurante restaurante) {
-    // Actualiza la ubicación en el mapa cuando cambie el restaurante seleccionado
-    setState(() {
-      _ubicacionRestaurante = LatLng(restaurante.latitud, restaurante.longitud);
-    });
-    _mapController?.animateCamera(CameraUpdate.newLatLng(_ubicacionRestaurante!));
+  void _actualizarSucursal(Sucursal? sucursal) {
+    if (sucursal != null) {
+      setState(() {
+        _ubicacionRestaurante = LatLng(sucursal.latitud, sucursal.longitud);
+      });
+      _mapController?.animateCamera(CameraUpdate.newLatLng(_ubicacionRestaurante!));
+    } else {
+      setState(() {
+        _ubicacionRestaurante = null; // Limpiar la ubicación cuando no hay sucursal
+      });
+    }
   }
 
   void _onMapCreated(GoogleMapController controller) {
@@ -65,17 +99,22 @@ class _NuevaReservacionPageState extends State<NuevaReservacionPage> {
       _formKey.currentState!.save();
 
       if (cuposRestantes != null && cuposRestantes! >= cantidadPersonas) {
-        final nuevaReservacion = Reservacion(
-          nombreCliente: nombreCliente,
-          cantidadPersonas: cantidadPersonas,
-          restaurante: restauranteSeleccionado!,
-          hora: horaSeleccionada!,
-        );
+        if (sucursalSeleccionada != null) {
+          final nuevaReservacion = Reservacion(
+            nombreCliente: nombreCliente,
+            cantidadPersonas: cantidadPersonas,
+            restaurante: restauranteSeleccionado!,
+            sucursal: sucursalSeleccionada!,
+            hora: horaSeleccionada!,
+          );
 
-        reservaciones.add(nuevaReservacion);
+          reservaciones.add(nuevaReservacion);
 
-        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Reservación realizada')));
-        Navigator.pop(context);
+          ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Reservación realizada')));
+          Navigator.pop(context);
+        } else {
+          ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Seleccione una sucursal')));
+        }
       } else {
         ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('No hay suficientes cupos disponibles')));
       }
@@ -110,6 +149,7 @@ class _NuevaReservacionPageState extends State<NuevaReservacionPage> {
                     labelText: 'Restaurante',
                     border: OutlineInputBorder(),
                   ),
+                  value: restauranteSeleccionado, // Inicializar el valor
                   items: restaurantes.map((r) {
                     return DropdownMenuItem<Restaurante>(
                       value: r,
@@ -119,20 +159,43 @@ class _NuevaReservacionPageState extends State<NuevaReservacionPage> {
                   onChanged: (value) {
                     setState(() {
                       restauranteSeleccionado = value;
+                      sucursalSeleccionada = null; // Reiniciar sucursal seleccionada
                       _actualizarCuposRestantes();
-                      if (value != null) {
-                        _actualizarMapa(value); // Actualiza el mapa cuando se selecciona el restaurante
-                      }
+                      _actualizarSucursal(null); // Limpiar la ubicación del mapa
                     });
                   },
                   validator: (value) => value == null ? 'Seleccione un restaurante' : null,
                 ),
+                const SizedBox(height: 16),
+                if (restauranteSeleccionado != null)
+                  DropdownButtonFormField<Sucursal>(
+                    decoration: const InputDecoration(
+                      labelText: 'Sucursal',
+                      border: OutlineInputBorder(),
+                    ),
+                    value: sucursalSeleccionada, // Inicializar el valor
+                    items: restauranteSeleccionado!.sucursales.map((sucursal) {
+                      return DropdownMenuItem<Sucursal>(
+                        value: sucursal,
+                        child: Text(sucursal.nombre),
+                      );
+                    }).toList(),
+                    onChanged: (value) {
+                      setState(() {
+                        sucursalSeleccionada = value;
+                        _actualizarCuposRestantes();
+                        _actualizarSucursal(value); // Actualiza el mapa cuando se selecciona una sucursal
+                      });
+                    },
+                    validator: (value) => value == null ? 'Seleccione una sucursal' : null,
+                  ),
                 const SizedBox(height: 16),
                 DropdownButtonFormField<String>(
                   decoration: const InputDecoration(
                     labelText: 'Hora',
                     border: OutlineInputBorder(),
                   ),
+                  value: horaSeleccionada, // Inicializar el valor
                   items: horas.map((hora) {
                     return DropdownMenuItem<String>(
                       value: hora,
@@ -148,7 +211,6 @@ class _NuevaReservacionPageState extends State<NuevaReservacionPage> {
                   validator: (value) => value == null ? 'Seleccione una hora' : null,
                 ),
                 const SizedBox(height: 16),
-                
                 if (cuposRestantes != null)
                   Text(
                     'Cupos restantes: $cuposRestantes',
@@ -165,8 +227,7 @@ class _NuevaReservacionPageState extends State<NuevaReservacionPage> {
                   validator: (value) => int.tryParse(value!) == null ? 'Ingrese un número válido' : null,
                 ),
                 const SizedBox(height: 24),
-                
-                // Agregar el mapa si se ha seleccionado un restaurante
+                // Agregar el mapa si se ha seleccionado una sucursal
                 if (_ubicacionRestaurante != null)
                   SizedBox(
                     height: 200,
@@ -181,13 +242,12 @@ class _NuevaReservacionPageState extends State<NuevaReservacionPage> {
                           markerId: const MarkerId('restaurante'),
                           position: _ubicacionRestaurante!,
                           infoWindow: InfoWindow(
-                            title: restauranteSeleccionado?.nombre ?? 'Restaurante',
+                            title: sucursalSeleccionada?.nombre ?? 'Sucursal',
                           ),
                         ),
                       },
                     ),
                   ),
-                
                 const SizedBox(height: 24),
                 ElevatedButton(
                   onPressed: _realizarReservacion,

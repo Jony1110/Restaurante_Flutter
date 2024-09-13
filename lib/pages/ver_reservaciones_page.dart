@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:myapp/pages/nueva_reservacion_page.dart';
-// Jonathan Frias;
+// import '../models/reservacion.dart';  // Asegúrate de importar el archivo de reservacion
 
 class VerReservacionesPage extends StatelessWidget {
   const VerReservacionesPage({super.key});
@@ -23,7 +23,7 @@ class VerReservacionesPage extends StatelessWidget {
             child: ListTile(
               title: Text('${reservacion.nombreCliente} (${reservacion.hora})'),
               subtitle: Text(
-                'Personas: ${reservacion.cantidadPersonas}, Restaurante: ${reservacion.restaurante.nombre}',
+                'Personas: ${reservacion.cantidadPersonas}, Restaurante: ${reservacion.restaurante.nombre}, Sucursal: ${reservacion.sucursal.nombre}',
               ),
             ),
           );
@@ -32,3 +32,4 @@ class VerReservacionesPage extends StatelessWidget {
     );
   }
 }
+

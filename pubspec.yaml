@@ -23,7 +23,7 @@ dependencies:
   universal_html: ^2.0.12
 
   # Google Maps Flutter dependency
-  google_maps_flutter: ^2.2.5  # Añadir esta línea
+  google_maps_flutter: ^2.2.5
 
 dev_dependencies:
   flutter_test:

@@ -10,7 +10,7 @@ class MapaRestaurantePage extends StatefulWidget {
 
 class _MapaRestaurantePageState extends State<MapaRestaurantePage> {
   // Configura la ubicación del restaurante
-  final LatLng _ubicacionRestaurante = LatLng(37.7749, -122.4194); // Lat y Long del restaurante
+  final LatLng _ubicacionRestaurante = const LatLng(37.7749, -122.4194); // Lat y Long del restaurante
 
   GoogleMapController? _mapController;
 
@@ -32,9 +32,9 @@ class _MapaRestaurantePageState extends State<MapaRestaurantePage> {
         ),
         markers: {
           Marker(
-            markerId: MarkerId('restaurante'),
+            markerId: const MarkerId('restaurante'),
             position: _ubicacionRestaurante,
-            infoWindow: InfoWindow(title: 'Restaurante'),
+            infoWindow: const InfoWindow(title: 'Restaurante'),
           ),
         },
       ),
