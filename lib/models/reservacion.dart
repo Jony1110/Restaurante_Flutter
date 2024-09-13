@@ -8,5 +8,3 @@ class Reservacion {
 
   Reservacion({required this.nombreCliente, required this.cantidadPersonas, required this.restaurante, required this.hora});
 }
-
-// Jonathan Frias //

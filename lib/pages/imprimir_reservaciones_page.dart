@@ -118,5 +118,3 @@ class ImprimirReservacionesPage extends StatelessWidget {
     );
   }
 }
-
-// Jonathan Frias //
