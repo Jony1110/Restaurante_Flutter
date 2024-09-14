@@ -5,10 +5,10 @@ class MapaRestaurantePage extends StatefulWidget {
   const MapaRestaurantePage({super.key});
 
   @override
-  _MapaRestaurantePageState createState() => _MapaRestaurantePageState();
+  MapaRestaurantePageState createState() => MapaRestaurantePageState();
 }
 
-class _MapaRestaurantePageState extends State<MapaRestaurantePage> {
+class MapaRestaurantePageState extends State<MapaRestaurantePage> {
   // Configura la ubicación del restaurante
   final LatLng _ubicacionRestaurante = const LatLng(37.7749, -122.4194); // Lat y Long del restaurante
 

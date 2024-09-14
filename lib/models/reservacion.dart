@@ -1,12 +1,12 @@
 import 'restaurante.dart';
 
 class Reservacion {
-  final String nombreCliente;
-  final int cantidadPersonas;
-  final Restaurante restaurante;
-  final Sucursal sucursal;
-  final String hora;
- 
+  String nombreCliente;
+  int cantidadPersonas;
+  Restaurante restaurante;
+  Sucursal sucursal;
+  String hora;
+
   Reservacion({
     required this.nombreCliente,
     required this.cantidadPersonas,

@@ -1,16 +1,19 @@
 // Jonathan Frias;
 
 class Sucursal {
-  final String nombre;
-  final double latitud;
-  final double longitud;
+  String nombre;
+  double latitud;
+  double longitud;
+  int capacidadMaxima;
 
   Sucursal({
     required this.nombre,
     required this.latitud,
     required this.longitud,
+    required this.capacidadMaxima,
   });
 }
+
 
 class Restaurante {
   final String nombre;

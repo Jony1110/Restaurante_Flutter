@@ -23,6 +23,7 @@ class ImprimirReservacionesPage extends StatelessWidget {
             _buildRestaurantTile(context, 'Zao'),
             _buildRestaurantTile(context, 'Grappa'),
             _buildRestaurantTile(context, 'Larimar'),
+            _buildRestaurantTile(context, 'Jade Teriyaki'), // Agregado aquí
           ],
         ),
       ),
@@ -94,32 +95,31 @@ class ImprimirReservacionesPage extends StatelessWidget {
   }
 
   Future<void> _generarPdf(BuildContext context, Reservacion reservacion) async {
-  final pdf = pw.Document();
+    final pdf = pw.Document();
 
-  pdf.addPage(
-    pw.Page(
-      build: (pw.Context context) {
-        return pw.Center( // Centra todo el contenido en el medio de la página
-          child: pw.Column(
-            mainAxisAlignment: pw.MainAxisAlignment.center, // Centra verticalmente el contenido
-            children: [
-              pw.Text('Detalles de la Reservación', style: pw.TextStyle(fontSize: 24)),
-              pw.SizedBox(height: 16),
-              pw.Text('Nombre del Cliente: ${reservacion.nombreCliente}'),
-              pw.Text('Restaurante: ${reservacion.restaurante.nombre}'),
-              pw.Text('Sucursal: ${reservacion.sucursal.nombre}'),
-              pw.Text('Hora: ${reservacion.hora}'),
-              pw.Text('Cantidad de Personas: ${reservacion.cantidadPersonas}'),
-            ],
-          ),
-        );
-      },
-    ),
-  );
+    pdf.addPage(
+      pw.Page(
+        build: (pw.Context context) {
+          return pw.Center( // Centra todo el contenido en el medio de la página
+            child: pw.Column(
+              mainAxisAlignment: pw.MainAxisAlignment.center, // Centra verticalmente el contenido
+              children: [
+                pw.Text('Detalles de la Reservación', style: pw.TextStyle(fontSize: 24)),
+                pw.SizedBox(height: 16),
+                pw.Text('Nombre del Cliente: ${reservacion.nombreCliente}'),
+                pw.Text('Restaurante: ${reservacion.restaurante.nombre}'),
+                pw.Text('Sucursal: ${reservacion.sucursal.nombre}'),
+                pw.Text('Hora: ${reservacion.hora}'),
+                pw.Text('Cantidad de Personas: ${reservacion.cantidadPersonas}'),
+              ],
+            ),
+          );
+        },
+      ),
+    );
 
-  await Printing.layoutPdf(
-    onLayout: (PdfPageFormat format) async => pdf.save(),
-  );
-}
-
+    await Printing.layoutPdf(
+      onLayout: (PdfPageFormat format) async => pdf.save(),
+    );
+  }
 }
