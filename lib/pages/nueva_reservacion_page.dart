@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:google_maps_flutter/google_maps_flutter.dart'; // Importa el paquete de Google Maps
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 import '../models/restaurante.dart';
 import '../models/reservacion.dart';
+import '../pages/servicio_correo.dart';
+// Jonathan Frias;
 
 List<Reservacion> reservaciones = [];
 
@@ -15,6 +17,7 @@ class NuevaReservacionPage extends StatefulWidget {
 class NuevaReservacionPageState extends State<NuevaReservacionPage> {
   final _formKey = GlobalKey<FormState>();
   String nombreCliente = '';
+  String correoCliente = '';
   int cantidadPersonas = 1;
   Restaurante? restauranteSeleccionado;
   Sucursal? sucursalSeleccionada;
@@ -76,7 +79,7 @@ class NuevaReservacionPageState extends State<NuevaReservacionPage> {
   GoogleMapController? _mapController;
   LatLng? _ubicacionRestaurante;
 
-  // Función para calcular cupos disponibles por sucursal
+  
   int cuposDisponiblesPorSucursal(Sucursal sucursal, String hora) {
     int reservacionesActuales = reservaciones
         .where((r) => r.sucursal.nombre == sucursal.nombre && r.hora == hora)
@@ -101,7 +104,7 @@ class NuevaReservacionPageState extends State<NuevaReservacionPage> {
       _mapController?.animateCamera(CameraUpdate.newLatLng(_ubicacionRestaurante!));
     } else {
       setState(() {
-        _ubicacionRestaurante = null; // Limpiar la ubicación cuando no hay sucursal
+        _ubicacionRestaurante = null; 
       });
     }
   }
@@ -110,32 +113,53 @@ class NuevaReservacionPageState extends State<NuevaReservacionPage> {
     _mapController = controller;
   }
 
-  void _realizarReservacion() {
-    if (_formKey.currentState!.validate()) {
-      _formKey.currentState!.save();
+  void _realizarReservacion() async {
+  if (_formKey.currentState!.validate()) {
+    _formKey.currentState!.save();
 
-      if (cuposRestantes != null && cuposRestantes! >= cantidadPersonas) {
-        if (sucursalSeleccionada != null) {
-          final nuevaReservacion = Reservacion(
+    if (cuposRestantes != null && cuposRestantes! >= cantidadPersonas) {
+      if (sucursalSeleccionada != null) {
+        final nuevaReservacion = Reservacion(
+          nombreCliente: nombreCliente,
+          correoCliente: correoCliente, 
+          cantidadPersonas: cantidadPersonas,
+          restaurante: restauranteSeleccionado!,
+          sucursal: sucursalSeleccionada!,
+          hora: horaSeleccionada!,
+        );
+
+        reservaciones.add(nuevaReservacion);
+
+
+        final emailService = EmailService();
+        try {
+          await emailService.sendReservationEmail(
+            recipientEmail: correoCliente,
             nombreCliente: nombreCliente,
-            cantidadPersonas: cantidadPersonas,
-            restaurante: restauranteSeleccionado!,
-            sucursal: sucursalSeleccionada!,
+            restaurante: restauranteSeleccionado!.nombre,
+            sucursal: sucursalSeleccionada!.nombre,
             hora: horaSeleccionada!,
+            cantidadPersonas: cantidadPersonas,
           );
-
-          reservaciones.add(nuevaReservacion);
-
-          ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Reservación realizada')));
-          Navigator.pop(context);
-        } else {
-          ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Seleccione una sucursal')));
+          ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(content: Text('Reservación realizada y correo enviado')));
+        } catch (e) {
+          ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(content: Text('Reservación realizada, pero no se pudo enviar el correo')));
         }
+
+        Navigator.pop(context);
       } else {
-        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('No hay suficientes cupos disponibles')));
+        ScaffoldMessenger.of(context)
+            .showSnackBar(const SnackBar(content: Text('Seleccione una sucursal')));
       }
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('No hay suficientes cupos disponibles')));
     }
   }
+}
+
 
   @override
   Widget build(BuildContext context) {
@@ -160,12 +184,21 @@ class NuevaReservacionPageState extends State<NuevaReservacionPage> {
                   validator: (value) => value!.isEmpty ? 'Por favor, ingrese un nombre' : null,
                 ),
                 const SizedBox(height: 16),
+                TextFormField(
+                  decoration: const InputDecoration(
+                    labelText: 'Correo Electrónico',
+                    border: OutlineInputBorder(),
+                  ),
+                  onSaved: (value) => correoCliente = value!,
+                  validator: (value) => value!.isEmpty ? 'Por favor, ingrese un correo' : null,
+                ),
+                const SizedBox(height: 16),
                 DropdownButtonFormField<Restaurante>(
                   decoration: const InputDecoration(
                     labelText: 'Restaurante',
                     border: OutlineInputBorder(),
                   ),
-                  value: restauranteSeleccionado, // Inicializar el valor
+                  value: restauranteSeleccionado, 
                   items: restaurantes.map((r) {
                     return DropdownMenuItem<Restaurante>(
                       value: r,
@@ -175,21 +208,21 @@ class NuevaReservacionPageState extends State<NuevaReservacionPage> {
                   onChanged: (value) {
                     setState(() {
                       restauranteSeleccionado = value;
-                      sucursalSeleccionada = null; // Reiniciar sucursal seleccionada
+                      sucursalSeleccionada = null; 
                       _actualizarCuposRestantes();
-                      _actualizarSucursal(null); // Limpiar mapa
+                      _actualizarSucursal(null); 
                     });
                   },
                 ),
                 const SizedBox(height: 16),
-                // Mostrar solo si se ha seleccionado un restaurante
+                
                 if (restauranteSeleccionado != null)
                   DropdownButtonFormField<Sucursal>(
                     decoration: const InputDecoration(
                       labelText: 'Sucursal',
                       border: OutlineInputBorder(),
                     ),
-                    value: sucursalSeleccionada, // Inicializar el valor
+                    value: sucursalSeleccionada, 
                     items: restauranteSeleccionado?.sucursales.map((s) {
                       return DropdownMenuItem<Sucursal>(
                         value: s,
@@ -211,7 +244,7 @@ class NuevaReservacionPageState extends State<NuevaReservacionPage> {
                     labelText: 'Hora',
                     border: OutlineInputBorder(),
                   ),
-                  value: horaSeleccionada, // Inicializar el valor
+                  value: horaSeleccionada, 
                   items: horas.map((h) {
                     return DropdownMenuItem<String>(
                       value: h,
@@ -247,7 +280,7 @@ class NuevaReservacionPageState extends State<NuevaReservacionPage> {
                   },
                 ),
                 const SizedBox(height: 16),
-                // Mostrar cupos restantes con color
+                
                 if (cuposRestantes != null)
                   Text(
                     cuposRestantes! > 0
@@ -256,13 +289,13 @@ class NuevaReservacionPageState extends State<NuevaReservacionPage> {
                     style: TextStyle(
                       fontSize: 16,
                       fontWeight: FontWeight.bold,
-                      color: cuposRestantes! > 0 ? Colors.green : Colors.red, // Color según disponibilidad
+                      color: cuposRestantes! > 0 ? Colors.green : Colors.red, 
                     ),
                   ),
                 const SizedBox(height: 16),
-                // Agregamos el mapa
+                
                 if (_ubicacionRestaurante != null)
-                  Container(
+                  SizedBox(
                     height: 300,
                     width: double.infinity,
                     child: GoogleMap(

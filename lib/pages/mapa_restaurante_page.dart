@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+// Jonathan Frias;
 
 class MapaRestaurantePage extends StatefulWidget {
   const MapaRestaurantePage({super.key});
@@ -9,8 +10,8 @@ class MapaRestaurantePage extends StatefulWidget {
 }
 
 class MapaRestaurantePageState extends State<MapaRestaurantePage> {
-  // Configura la ubicación del restaurante
-  final LatLng _ubicacionRestaurante = const LatLng(37.7749, -122.4194); // Lat y Long del restaurante
+
+  final LatLng _ubicacionRestaurante = const LatLng(37.7749, -122.4194); 
 
   GoogleMapController? _mapController;
 

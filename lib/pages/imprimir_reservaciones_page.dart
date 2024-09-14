@@ -4,6 +4,7 @@ import 'package:pdf/widgets.dart' as pw;
 import 'package:pdf/pdf.dart';
 import 'package:printing/printing.dart';
 import '../models/reservacion.dart';
+// Jonathan Frias;
 
 class ImprimirReservacionesPage extends StatelessWidget {
   const ImprimirReservacionesPage({super.key});
@@ -23,7 +24,7 @@ class ImprimirReservacionesPage extends StatelessWidget {
             _buildRestaurantTile(context, 'Zao'),
             _buildRestaurantTile(context, 'Grappa'),
             _buildRestaurantTile(context, 'Larimar'),
-            _buildRestaurantTile(context, 'Jade Teriyaki'), // Agregado aquí
+            _buildRestaurantTile(context, 'Jade Teriyaki'), 
           ],
         ),
       ),
@@ -100,11 +101,11 @@ class ImprimirReservacionesPage extends StatelessWidget {
     pdf.addPage(
       pw.Page(
         build: (pw.Context context) {
-          return pw.Center( // Centra todo el contenido en el medio de la página
+          return pw.Center( 
             child: pw.Column(
-              mainAxisAlignment: pw.MainAxisAlignment.center, // Centra verticalmente el contenido
+              mainAxisAlignment: pw.MainAxisAlignment.center, 
               children: [
-                pw.Text('Detalles de la Reservación', style: pw.TextStyle(fontSize: 24)),
+                pw.Text('Detalles de la Reservación', style: const pw.TextStyle(fontSize: 24)),
                 pw.SizedBox(height: 16),
                 pw.Text('Nombre del Cliente: ${reservacion.nombreCliente}'),
                 pw.Text('Restaurante: ${reservacion.restaurante.nombre}'),
